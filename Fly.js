@@ -3,6 +3,7 @@ class Fly extends Actor {
       let params = {
          "position": createVector(random(width / 4, 3 * width / 4), random(height / 4, 3 * height / 4)),
          "velocity": createVector(0, 0),
+         "fov": 70, // 70 degrees field of view
          "size": 5,
          "id": id,
          "maxVelocity": 2,

@@ -3,13 +3,14 @@ class Frog extends Actor {
       let params = {
          "position": createVector(random(width / 4, 3 * width / 4), random(height / 4, 3 * height / 4)),
          "velocity": createVector(0, 0),
+         "fov": 120, // 70 degrees field of view
          "size": 25,
          "id": id,
          "maxVelocity": 1,
          // Food related parameters
          "targets": "flies",
          "foodValue": 40,
-         "hungerDecay": 0.01
+         "hungerDecay": 0.1
       };
       super(params);
 
@@ -52,7 +53,16 @@ class Frog extends Actor {
    }
 
    moveTowardsNearestTarget(targets) {
+      stroke(0);
+      line(this.position.x, this.position.y, this.position.x + 20 * this.viewingVector.x, this.position.y + 20 * this.viewingVector.y);
       let nearestTarget = super.findNearestTarget(targets);
+
+      // If no object was found
+      if (Object.keys(nearestTarget).length === 0 && nearestTarget.constructor === Object) {
+         // Rotate to try and find one
+         this.viewingVector.rotate(radians(1));
+         return;
+      }
 
       let direction = nearestTarget.position.copy();
       direction.sub(this.position);

@@ -3,6 +3,8 @@ class Actor {
       this.position = params.position.copy();
       this.velocity = params.velocity.copy();
       this.acceleration = createVector(0, 0);
+      this.fov = radians(params.fov), // convert to radians
+      this.viewingVector = createVector(random(-1, 1), random(-1, 1));
       this.size = params.size;
       this.id = params.id;
       this.targets = params.targets;
@@ -25,6 +27,11 @@ class Actor {
       this.velocity.limit(this.maxVelocity);
       this.position.add(this.velocity);
       this.clampPosition();
+
+      if (this.velocity.mag() > 0) {
+         this.viewingVector = this.velocity.copy();
+         this.viewingVector.normalize();
+      }
    }
 
    wrapPosition() {
@@ -79,11 +86,11 @@ class Actor {
 
       for (let i = 0; i < targets.length; i++) {
          let target = targets[i]
-         let diff = createVector();
-         diff = this.position.copy();
-         diff.sub(target.position);
+         let diff = target.position.copy();
+         diff.sub(this.position);
+         let angle = diff.angleBetween(this.viewingVector);
 
-         if (diff.mag() < closestTarget.distance) {
+         if (diff.mag() < closestTarget.distance && abs(angle) < this.fov / 2) {
             closestTarget.distance = diff.mag();
             closestTarget.target = target;
          }
@@ -94,6 +101,21 @@ class Actor {
 
    draw() {
       this.drawStatusBars();
+      this.drawFov();
+   }
+
+   drawFov() {
+      let lineLength = this.size * 1.5;
+      let leftLine = this.viewingVector.copy();
+      let rightLine = this.viewingVector.copy();
+      leftLine.setMag(lineLength);
+      rightLine.setMag(lineLength);
+      leftLine.rotate(-this.fov / 2);
+      rightLine.rotate(this.fov / 2);
+
+      stroke(0);
+      line(this.position.x, this.position.y, this.position.x + leftLine.x, this.position.y + leftLine.y);
+      line(this.position.x, this.position.y, this.position.x + rightLine.x, this.position.y + rightLine.y);
    }
 
    drawStatusBars() {

@@ -3,11 +3,14 @@ let actors = {
    "frogs": []
 };
 
+let numFlies = 1;
+let numFrogs = 1;
+
 function setup() {
    createCanvas(1200, 500);
 
-   spawnFlies(numActors=100);
-   spawnFrogs(numActors=1);
+   spawnFlies(numActors=numFlies);
+   spawnFrogs(numActors=numFrogs);
 }
 
 function draw() {
