@@ -3,7 +3,7 @@ let actors = {
    "frogs": []
 };
 
-let numFlies = 1;
+let numFlies = 100;
 let numFrogs = 1;
 
 function setup() {
