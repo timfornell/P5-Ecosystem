@@ -15,9 +15,10 @@ class Actor {
 
    move() {
       this.hunger -= this.hungerDecay;
+      this.hunger = max(this.hunger, 0);
 
       if (this.isStarving()) {
-         this.isStarving();
+         this.starving();
       }
 
       this.velocity.add(this.acceleration);
